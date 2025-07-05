@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS Front-End Demo</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #2c3e50;
+            color: white;
+            padding-top: 20px;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .sidebar-nav .nav-link {
+            color: #bdc3c7;
+            padding: 10px 20px;
+            display: block;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar-nav .nav-link:hover,
+        .sidebar-nav .nav-link.active {
+            background-color: #34495e;
+            color: #ffffff;
+            border-left: 3px solid #3498db;
+        }
+
+        .sidebar-nav .nav-link i {
+            margin-right: 15px;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Dashboard Styles */
+        .card-count {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card-count h2 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .card-count .text-right { text-align: right; }
+        .card-count i {
+            font-size: 2.5rem;
+            padding: 15px;
+            border-radius: 50%;
+            color: #fff;
+        }
+        .bg-light-aqua { background-color: #48d1cc; }
+        .bg-light-orange { background-color: #ffa07a; }
+        .bg-light-red { background-color: #f08080; }
+        .bg-light-purple { background-color: #ba55d3; }
+
+        .chart-wrap {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        /* Account Page Styles */
+        .dashboard-description {
+            background-color: #f8f9fa;
+            border-left: 3px solid #0d6efd;
+            padding: 15px;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+        }
+        
+        /* Payment Page Styles */
+        .card-payment {
+            border-top: 10px solid #ddd;
+            border-radius: 0px;
+            padding: 20px;
+            margin: 10px;
+            text-align: center;
+            width: 300px;
+            transition: .5s;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card-payment:hover { background: #f4f4f4; transform: translateY(-5px); }
+        .card-payment.paypal { border-top-color: #ffc439; }
+        .card-payment.stripe { border-top-color: #62b8ea; }
+        .card-payment.coinbase { border-top-color: #1652f0; }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">SkyLearn</div>
+        <ul class="nav flex-column sidebar-nav">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" onclick="showPage('dashboard')"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showPage('account')"><i class="fas fa-user-circle"></i>My Account</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showPage('news')"><i class="fas fa-newspaper"></i>News & Events</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showPage('payments')"><i class="fas fa-credit-card"></i>Payments</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- DASHBOARD PAGE -->
+        <div id="dashboard" class="page active">
+            <h1 class="mb-4">Dashboard</h1>
+            
+            <div class="row users-count">
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="card-count">
+                        <i class="fas fa-users bg-light-aqua"></i>
+                        <div class="text-right">Students<h2>150</h2></div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="card-count">
+                        <i class="fas fa-chalkboard-teacher bg-light-orange"></i>
+                        <div class="text-right">Lecturers<h2>25</h2></div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="card-count">
+                        <i class="fas fa-user-shield bg-light-red"></i>
+                        <div class="text-right">Admins<h2>5</h2></div>
+                    </div>
+                </div>
+                 <div class="col-6 col-md-3 mb-4">
+                    <div class="card-count">
+                        <i class="fas fa-users-cog bg-light-purple"></i>
+                        <div class="text-right">Staff<h2>42</h2></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-7 mb-4">
+                    <div class="chart-wrap">
+                        <canvas id="trafficChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-5 mb-4">
+                    <div class="chart-wrap">
+                        <canvas id="genderChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="chart-wrap">
+                        <canvas id="enrollmentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCOUNT PAGE -->
+        <div id="account" class="page">
+            <h1 class="mb-4">My Account</h1>
+             <div class="row">
+                <div class="col-md-4">
+                    <div class="card p-3 text-center">
+                        <img src="https://via.placeholder.com/200" class="rounded-circle mx-auto d-block mb-3" alt="User Picture" width="150">
+                        <ul class="list-unstyled">
+                            <li class="fs-5 fw-bold">Abhishek Kumar</li>
+                            <li><strong>Role:</strong> Student</li>
+                            <li><strong>Last login:</strong> Oct 26, 2023</li>
+                        </ul>
+                        <hr>
+                        <a class="btn btn-outline-primary mb-2" href="#"><i class="fas fa-user-edit"></i> Edit Profile</a>
+                        <a class="btn btn-outline-secondary" href="#"><i class="fas fa-lock"></i> Change Password</a>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="fw-bold fs-5"><i class="me-2 fas fa-user"></i>Personal Info</p>
+                            <div class="dashboard-description">
+                                <p><strong>First Name:</strong> Abhishek</p>
+                                <p><strong>Last Name:</strong> Kumar</p>
+                                <p><strong>ID No.:</strong> 22040100020011</p>
+                            </div>
+
+                            <p class="fw-bold fs-5"><i class="me-2 fas fa-graduation-cap"></i>Applicant Info</p>
+                            <div class="dashboard-description">
+                                <p><strong>School:</strong> Hawas Preparatory School</p>
+                                <p><strong>Level:</strong> Bachelor of Science</p>
+                            </div>
+                            
+                            <p class="fw-bold fs-5"><i class="me-2 fas fa-phone-square-alt"></i>Contact Info</p>
+                            <div class="dashboard-description">
+                                <p><strong>Email:</strong> abhishek.kumar@example.com</p>
+                                <p><strong>Tel No.:</strong> +91 12345 67890</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- NEWS PAGE -->
+        <div id="news" class="page">
+             <h1 class="mb-4">News & Events</h1>
+             <div class="row">
+                <!-- Static News Item 1 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-primary text-white">News</div>
+                        <div class="card-body">
+                            <h5 class="card-title">Mid-Term Exams Schedule</h5>
+                            <p class="card-text" style="min-height: 100px;">The schedule for the upcoming mid-term examinations has been released. Please check the notice board.</p>
+                        </div>
+                        <div class="card-footer text-muted small">2 days ago</div>
+                    </div>
+                </div>
+                <!-- Static News Item 2 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header" style="background-color: #6f42c1; color: white;">Event</div>
+                        <div class="card-body">
+                            <h5 class="card-title">Annual Tech Fest 'Innovate 2023'</h5>
+                            <p class="card-text" style="min-height: 100px;">Get ready for the biggest tech event of the year! Registrations are now open for all competitions and workshops.</p>
+                        </div>
+                        <div class="card-footer text-muted small">5 days ago</div>
+                    </div>
+                </div>
+                 <!-- Static News Item 3 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-primary text-white">News</div>
+                        <div class="card-body">
+                            <h5 class="card-title">Library Timings Extended</h5>
+                            <p class="card-text" style="min-height: 100px;">Due to upcoming exams, the library will remain open until 10 PM on all weekdays. Happy studying!</p>
+                        </div>
+                        <div class="card-footer text-muted small">1 week ago</div>
+                    </div>
+                </div>
+             </div>
+        </div>
+
+        <!-- PAYMENTS PAGE -->
+        <div id="payments" class="page">
+            <h1 class="display-4">Payment Gateways</h1>
+            <p class="lead">Choose a method to complete your payment.</p>
+            <div class="d-flex flex-wrap justify-content-center">
+                <!-- PayPal -->
+                <div class="card-payment paypal">
+                    <h4>PayPal</h4>
+                    <p>Secure and fast payments.</p>
+                    <div id="paypal-button-container"></div>
+                </div>
+                <!-- Stripe -->
+                <div class="card-payment stripe">
+                    <h4>Stripe</h4>
+                    <p>Pay with any credit/debit card.</p>
+                    <button class="btn btn-primary" style="background-color: #62b8ea; border:none;" onclick="alert('Stripe integration placeholder.')">Pay with Card</button>
+                </div>
+                <!-- Coinbase -->
+                <div class="card-payment coinbase">
+                    <h4>Coinbase</h4>
+                    <p>Pay with cryptocurrency.</p>
+                    <button class="btn btn-primary" style="background-color: #1652f0; border:none;" onclick="alert('Coinbase integration placeholder.')">Pay with Crypto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=sb¤cy=USD"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        // --- Navigation Logic ---
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            // Deactivate all nav links
+            document.querySelectorAll('.sidebar-nav .nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show the selected page
+            document.getElementById(pageId).classList.add('active');
+            // Activate the corresponding nav link
+            document.querySelector(`.sidebar-nav .nav-link[onclick="showPage('${pageId}')"]`).classList.add('active');
+        }
+
+        // --- Dashboard Charts ---
+        document.addEventListener("DOMContentLoaded", function() {
+            // Traffic Chart (Line)
+            const trafficCtx = document.getElementById('trafficChart').getContext('2d');
+            new Chart(trafficCtx, {
+                type: 'line',
+                data: {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                    datasets: [{
+                        label: 'Website Traffic',
+                        data: [120, 190, 300, 500, 210, 330],
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'top' }, title: { display: true, text: 'Monthly Website Visits' }}
+                }
+            });
+
+            // Gender Chart (Pie)
+            const genderCtx = document.getElementById('genderChart').getContext('2d');
+            new Chart(genderCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Male', 'Female'],
+                    datasets: [{
+                        label: 'Student Gender Distribution',
+                        data: [85, 65], // Static data
+                        backgroundColor: ['rgb(54, 162, 235)', 'rgb(255, 99, 132)'],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'top' }, title: { display: true, text: 'Student Gender Distribution' }}
+                }
+            });
+            
+            // Enrollment Chart (Bar)
+            const enrollmentCtx = document.getElementById('enrollmentChart').getContext('2d');
+            new Chart(enrollmentCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Computer Science', 'Architecture', 'Civil Eng.', 'Accounting', 'Business M.'],
+                    datasets: [{
+                        label: 'Enrollment per Course',
+                        data: [45, 28, 60, 45, 90],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)', 'rgba(75, 192, 192, 0.5)', 'rgba(153, 102, 255, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                     responsive: true,
+                    plugins: { legend: { display: false }, title: { display: true, text: 'Enrollment Across Top Courses' }}
+                }
+            });
+        });
+        
+        // --- PayPal Button Logic ---
+        paypal.Buttons({
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '88.44' // Example amount
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    // Show a success message to the buyer
+                    alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                    // Note: In a real app, you would now send a confirmation to your server.
+                });
+            },
+            onError: function(err) {
+                // For demonstration, show an error to the user
+                console.error("PayPal Error:", err);
+                alert("An error occurred with your payment.");
+            }
+        }).render('#paypal-button-container');
+
+    </script>
+</body>
+</html>
